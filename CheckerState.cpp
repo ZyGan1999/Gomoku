@@ -51,11 +51,12 @@ bool CheckerState::isNeighborPiece(int x, int y)
 }
 vector<vector<int>> CheckerState::getChecker()
 {
-	vector<vector<int>> judges;
+	vector<vector<int>> judges;//用于估价的二维数组
+	//行与列
 	for (int i = 0; i < 19; i++) {
 		vector<int> curRow;
 		vector<int> curLine;
-		curRow.push_back(3);
+		curRow.push_back(3);//在数组的始末位置加入3作为边界
 		curLine.push_back(3);
 		for (int j = 0; j < 19; j++) {
 			int x1 = _pieces[i][j];
@@ -68,6 +69,7 @@ vector<vector<int>> CheckerState::getChecker()
 		judges.push_back(curRow);
 		judges.push_back(curLine);
 	}
+	//上半正斜线们
 	for (int i = 0; i < 19; ++i)
 	{
 		int x, y;
@@ -79,6 +81,7 @@ vector<vector<int>> CheckerState::getChecker()
 		n.push_back(3);
 		judges.push_back(n);
 	}
+	//下半正斜线们
 	for (int j = 1; j < 19; ++j)
 	{
 		int x, y;

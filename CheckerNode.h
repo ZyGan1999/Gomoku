@@ -5,7 +5,7 @@ class CheckerNode
 public:
 	CheckerNode();
 	CheckerNode(CheckerState st);
-	CheckerNode(const CheckerNode & ck);
+	CheckerNode(const CheckerNode & ck);//复制构造
 	CheckerNode createChdByPutPiece(PiecePosition p,bool isblack);//通过在(x,y)坐标处下子生成子节点
 	CheckerState & getState() {
 		return _state;

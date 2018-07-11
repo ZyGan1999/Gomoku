@@ -56,12 +56,12 @@ long long SearchSolver::CalcNodeScore(CheckerNode & node)
 long long SearchSolver::Max(CheckerNode & node, int depth, long long alpha)
 {
 	long long ret = -100000000000;
-	if (depth <= 0) return CalcNodeScore(node);
+	if (depth <= 0) return CalcNodeScore(node);//递归边界
 	for (int i = 0; i < 19; i++) {
 		for (int j = 0; j < 19; j++) {
-			if (node.getState().shouldPutPiece(i, j)) {
+			if (node.getState().shouldPutPiece(i, j)) {//可下子并且周围有其他子
 				CheckerNode child = node.createChdByPutPiece(PiecePosition(i, j), true);//下黑棋生成子节点
-				long long val = Min(child, depth - 1, ret);
+				long long val = Min(child, depth - 1, ret);//进入Min层继续递归
 				if (val > ret) { ret = val; }
 				//if (val > alpha) { alpha = val; }
 			}
@@ -73,14 +73,14 @@ long long SearchSolver::Max(CheckerNode & node, int depth, long long alpha)
 long long SearchSolver::Min(CheckerNode & node, int depth, long long beta)
 {
 	long long ret = 100000000000000;
-	if (depth <= 0) return CalcNodeScore(node);
+	if (depth <= 0) return CalcNodeScore(node);//递归边界
 	for (int i = 0; i < 19; i++) {
 		for (int j = 0; j < 19; j++) {
-			if (node.getState().shouldPutPiece(i, j)) {
+			if (node.getState().shouldPutPiece(i, j)) {//可下子并且周围有其他子
 				CheckerNode child = node.createChdByPutPiece(PiecePosition(i, j), false);//下白棋生成子节点
-				long long val = Max(child, depth - 1, ret);
+				long long val = Max(child, depth - 1, ret);//进入Max层继续递归
 				if (val < ret) ret = val;
-				if (val < beta) return beta;
+				if (val < beta) return beta;//beta剪枝
 			}
 		}
 	}
@@ -91,7 +91,7 @@ long long SearchSolver::CalcNumOfContinuePiece(vector<int>& vec)
 {
 	long long rtn = 0;
 	for (auto i = vec.begin(); i != vec.end(); ++i) {
-		if ((*i) == 0 || (*i) == 3) continue;
+		if ((*i) == 0 || (*i) == 3) continue;//注：棋盘边界为3
 		long long piecetype = (*i);
 		auto j = i + 1;
 		while (j != vec.end() && (*j) == piecetype) ++j;
@@ -100,15 +100,15 @@ long long SearchSolver::CalcNumOfContinuePiece(vector<int>& vec)
 		if (*(i - 1) == 0) ++freeNum;
 		if ((*j) == 0) ++freeNum;
 		if (piecetype == -1) piecetype *= 2;
-		if (continum == 5) rtn += piecetype * 2147483647;
-		else if (continum == 4 && freeNum == 2) rtn += piecetype * 500000;
-		else if (continum == 4 && freeNum == 1) rtn += piecetype * 1000;
-		else if (continum == 3 && freeNum == 2) rtn += piecetype * 1500;
-		else if (continum == 3 && freeNum == 1) rtn += piecetype * 100;
-		else if (continum == 2 && freeNum == 2) rtn += piecetype * 200;
-		else if (continum == 2 && freeNum == 1) rtn += piecetype * 50;
-		else if (continum == 1 && freeNum == 2) rtn += piecetype * 10;
-		else if(continum == 1 && freeNum == 1) rtn += piecetype;
+		if (continum == 5) rtn += piecetype * 2147483647;//五连 评估为无穷大
+		else if (continum == 4 && freeNum == 2) rtn += piecetype * 500000;//活四 评估为500000分
+		else if (continum == 4 && freeNum == 1) rtn += piecetype * 1000;//半死四 1000分
+		else if (continum == 3 && freeNum == 2) rtn += piecetype * 1500;//活三 1500分
+		else if (continum == 3 && freeNum == 1) rtn += piecetype * 100;//半死三 100分
+		else if (continum == 2 && freeNum == 2) rtn += piecetype * 200;//活二 200分
+		else if (continum == 2 && freeNum == 1) rtn += piecetype * 50;//半死二 50分
+		else if (continum == 1 && freeNum == 2) rtn += piecetype * 10;//活一 10分
+		else if(continum == 1 && freeNum == 1) rtn += piecetype;//半活一 1分
 		i = j - 1;
 	}
 	return rtn;
